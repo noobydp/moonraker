@@ -33,8 +33,9 @@ class JobQueue:
         self.lock = asyncio.Lock()
         self.pause_requested: bool = False
         self.load_on_start = config.getboolean("load_on_startup", False)
+        self.pause_on_start = config.getboolean("pause_on_startup", True)
         self.automatic = config.getboolean("automatic_transition", False)
-        self.queue_state: str = "paused"
+        self.queue_state: str = "paused" if self.pause_on_start else "ready"
         self.job_delay = config.getfloat("job_transition_delay", 0.01)
         if self.job_delay <= 0.:
             raise config.error(
@@ -77,12 +78,16 @@ class JobQueue:
         async with self.lock:
             if not self.load_on_start or not self.queued_jobs:
                 return
-            # start a queued print
-            if self.queue_state in ['ready', 'paused']:
-                event_loop = self.server.get_event_loop()
-                self._set_queue_state("loading")
-                self.pop_queue_handle = event_loop.delay_callback(
-                    1., self._pop_job, False)
+            # Start a queued print if not paused on startup
+            if self.pause_on_start:
+                self._set_queue_state("paused")
+            else:
+                self._set_queue_state("ready")
+                if self.queue_state == "ready" and self.queued_jobs:
+                    event_loop = self.server.get_event_loop()
+                    self.pop_queue_handle = event_loop.delay_callback(
+                        self.job_delay, self._pop_job, False)
+
 
     async def _handle_shutdown(self) -> None:
         has_requested_pause = self.pause_requested
