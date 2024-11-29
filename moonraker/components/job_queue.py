@@ -33,7 +33,7 @@ class JobQueue:
         self.lock = asyncio.Lock()
         self.pause_requested: bool = False
         self.load_on_start = config.getboolean("load_on_startup", False)
-        self.pause_on_start = config.getboolean("pause_on_startup", True)
+        self.pause_on_start = config.getboolean("pause_on_startup", False)
         self.automatic = config.getboolean("automatic_transition", False)
         self.queue_state: str = "paused" if self.pause_on_start else "ready"
         self.job_delay = config.getfloat("job_transition_delay", 0.01)

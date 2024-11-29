@@ -308,6 +308,12 @@ load_on_startup: False
 #   been paused it will automatically resume.  Note that neither
 #   the job_transition_delay nor the job_transition_gcode are
 #   applied in this case.  The default is False.
+pause_on_startup: True
+#   When true and used load_on_startup: true, the job queue will
+#   load in a paused state so it will not automatically begin printing.
+#   This allows the job queue to be retained across restarts but 
+#   allows control over when the jobs are started. 
+#   The default is False to retain existing behaviour.
 automatic_transition: False
 #   When set to True the queue will automatically transition to
 #   the next job in the queue after the current job is complete.
@@ -1763,6 +1769,7 @@ queue_gcode_uploads: True
 # ready.
 [job_queue]
 load_on_startup: True
+pause_on_startup: False
 # Configure the job_transition_delay and job_transition_gcode options
 # if desired.  Note that they do no apply to prints loaded on startup.
 

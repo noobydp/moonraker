@@ -364,6 +364,7 @@ included.
         "job_state": {},
         "job_queue": {
             "load_on_startup": true,
+            "pause_on_startup": false,
             "automatic_transition": false,
             "job_transition_delay": 2,
             "job_transition_gcode": "\nM118 Transitioning to next job..."
@@ -438,7 +439,8 @@ included.
         "job_queue": {
             "job_transition_delay": "2.",
             "job_transition_gcode": "\nM118 Transitioning to next job...",
-            "load_on_startup": "True"
+            "load_on_startup": "True",
+            "pause_on_startup": "False"
         },
         "authorization": {
             "trusted_clients": "\n192.168.1.0/24",
